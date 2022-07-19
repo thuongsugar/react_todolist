@@ -5,9 +5,10 @@ import {
     updateDoc,
     deleteDoc,
 } from "firebase/firestore";
-import { updatePassword } from "firebase/auth";
+import { updateEmail, updatePassword, updateProfile } from "firebase/auth";
 
 import { auth, db } from "./config";
+import { async } from "@firebase/util";
 export async function addTodoDB(data) {
     const todosRef = collection(db, "todos");
     try {
@@ -31,6 +32,12 @@ export async function deleteDocDB(listIdDoc) {
         await deleteDoc(todoRef);
     });
 }
-export async function upDatePassWordDB(passNew) {
+export async function updatePassWordDB(passNew) {
     await updatePassword(auth.currentUser, passNew);
+}
+export async function updateProfileDB({ displayName }) {
+    return await updateProfile(auth.currentUser, { displayName });
+}
+export async function updateEmailDB(email) {
+    return await updateEmail(auth.currentUser, email);
 }

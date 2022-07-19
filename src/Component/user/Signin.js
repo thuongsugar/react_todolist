@@ -1,16 +1,31 @@
 import { LockOutlined, UserOutlined, MailOutlined } from "@ant-design/icons";
 import { useState, useEffect, useContext } from "react";
 import { Button, Modal, Form, Input } from "antd";
-import { createUserWithEmailAndPassword, updateProfile } from "firebase/auth";
+import { createUserWithEmailAndPassword } from "firebase/auth";
 
 import { auth } from "../../firebase/config";
 import { AuthContext } from "../../Context/AuthProvider";
 import handleError from "../../error/handleError";
+import { updateProfileDB } from "../../firebase/service";
+import { useNavigate } from "react-router-dom";
 
 function Signin() {
     const userAuth = useContext(AuthContext);
     const [form] = Form.useForm();
+    const navigate = useNavigate();
     const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
+    const [isModalVisible, setIsModalVisible] = useState(true);
+    useEffect(() => {
+        if (userAuth.user) {
+            console.log("vao");
+            navigate("..");
+        }
+    }, [userAuth.user]);
+    useEffect(() => {
+        if (!isModalVisible) {
+            navigate("..");
+        }
+    }, [isModalVisible]);
 
     useEffect(() => {
         forceUpdate({});
@@ -23,7 +38,7 @@ function Signin() {
                 values.email,
                 values.password
             );
-            await updateProfile(auth.currentUser, {
+            await updateProfileDB({
                 displayName: values.userName,
             });
             userAuth.setUserName(auth.currentUser.displayName);
@@ -32,8 +47,6 @@ function Signin() {
             handleError(error.code);
         }
     };
-
-    const [isModalVisible, setIsModalVisible] = useState(false);
 
     const showModal = () => {
         setIsModalVisible(true);
@@ -51,9 +64,9 @@ function Signin() {
 
     return (
         <>
-            <Button ghost type="primary" onClick={showModal}>
+            {/* <Button ghost type="primary" onClick={showModal}>
                 Sign in
-            </Button>
+            </Button> */}
             <Modal
                 title="Sign in"
                 visible={isModalVisible}

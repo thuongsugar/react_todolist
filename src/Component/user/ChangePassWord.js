@@ -1,17 +1,19 @@
 // import {} from "react";
 import { LockOutlined } from "@ant-design/icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button, Modal, Form, Input } from "antd";
-import { upDatePassWordDB } from "../../firebase/service";
+import { useNavigate } from "react-router-dom";
+import { updatePassWordDB } from "../../firebase/service";
 import handleError from "../../error/handleError";
 function ChangePassWord() {
     const [form] = Form.useForm();
-
+    const [isModalVisible, setIsModalVisible] = useState(true);
+    const navigate = useNavigate();
     const onFinish = async (values) => {
         console.log(values);
         const newPass = values.newPass.trim();
         try {
-            await upDatePassWordDB(newPass);
+            await updatePassWordDB(newPass);
             handleError("success");
             setIsModalVisible(false);
             form.resetFields();
@@ -21,12 +23,11 @@ function ChangePassWord() {
             form.getFieldInstance("newPass").focus();
         }
     };
-
-    const [isModalVisible, setIsModalVisible] = useState(false);
-
-    const showModal = () => {
-        setIsModalVisible(true);
-    };
+    useEffect(() => {
+        if (!isModalVisible) {
+            navigate("/");
+        }
+    }, [isModalVisible]);
 
     const handleOk = () => {
         setIsModalVisible(false);
@@ -34,15 +35,13 @@ function ChangePassWord() {
     };
 
     const handleCancel = () => {
+        console.log("cancel");
         setIsModalVisible(false);
         form.resetFields();
     };
 
     return (
         <>
-            <p onClick={showModal} style={{ cursor: "pointer" }}>
-                Change PassWord
-            </p>
             <Modal
                 title="Change password"
                 visible={isModalVisible}

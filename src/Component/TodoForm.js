@@ -40,7 +40,6 @@ function TodoForm(props) {
         }
     }
     const isTimeOut = checkTimeOut();
-    console.log(timeChoice);
     let timeOutAttribute = {
         // readOnly: true,
         disabled: true,

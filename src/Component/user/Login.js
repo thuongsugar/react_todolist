@@ -1,5 +1,6 @@
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
+import { Link, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Button, Modal, Form, Input } from "antd";
 
@@ -9,10 +10,17 @@ import handleError from "../../error/handleError";
 import { auth } from "../../firebase/config";
 
 function Login({ refModelLogin }) {
+    console.log(refModelLogin);
+    const navigate = useNavigate();
     const [form] = Form.useForm();
     const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
-    const [isModalVisible, setIsModalVisible] = useState(false);
-    useEffect(() => (refModelLogin.current = handleModelLogin), []);
+    const [isModalVisible, setIsModalVisible] = useState(true);
+    // useEffect(() => (refModelLogin.current = handleModelLogin), []);
+    useEffect(() => {
+        if (!isModalVisible) {
+            navigate("..");
+        }
+    }, [isModalVisible]);
     function handleModelLogin() {
         setIsModalVisible(true);
     }
@@ -50,15 +58,19 @@ function Login({ refModelLogin }) {
 
     return (
         <>
-            <Button ghost onClick={showModal}>
+            {/* <Button ghost onClick={showModal}>
                 Login
-            </Button>
+            </Button> */}
             <Modal
                 title="Login"
                 visible={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
-                footer={[<Signin></Signin>]}
+                footer={[
+                    <Link to="/register">
+                        <Button>Sign in</Button>
+                    </Link>,
+                ]}
             >
                 <Form
                     form={form}
@@ -117,7 +129,6 @@ function Login({ refModelLogin }) {
                         )}
                     </Form.Item>
                 </Form>
-                {/* <Signin /> */}
             </Modal>
         </>
     );

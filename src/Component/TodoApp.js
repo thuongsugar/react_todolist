@@ -1,5 +1,5 @@
 import { useState, useRef, useContext, useEffect } from "react";
-import { Space, Popover, Spin, Divider } from "antd";
+import { Space, Popover, Spin, Divider, Button } from "antd";
 import {
     collection,
     query,
@@ -7,8 +7,7 @@ import {
     onSnapshot,
     orderBy,
 } from "firebase/firestore";
-
-import { addTodoDB, updateTodoDB, deleteDocDB } from "../firebase/service";
+import { Link, Outlet, useNavigate } from "react-router-dom";
 
 import TodoForm from "./TodoForm";
 import ToDoList from "./TodoList";
@@ -17,15 +16,18 @@ import Login from "./user/Login";
 import Logout from "./user/Logout";
 import ChangePassWord from "./user/ChangePassWord";
 
+import { addTodoDB, updateTodoDB, deleteDocDB } from "../firebase/service";
+
 import { AuthContext } from "../Context/AuthProvider";
 import { auth, db } from "../firebase/config";
 import { TimeContext } from "../Context/TimeProvider";
 
-function DataPickerAnt() {
+function TodoApp() {
     const user = useContext(AuthContext);
     const [timeChoice, setTimeChoice] = useContext(TimeContext);
     const [todoList, setTodo] = useState([]);
     const [isLoading, setLoading] = useState(false);
+    const navigate = useNavigate();
     const stateTodoForm = useRef();
     const refModelLogin = useRef();
 
@@ -56,6 +58,7 @@ function DataPickerAnt() {
 
     function addTodo(inputData, indexTodo) {
         if (!auth.currentUser) {
+            navigate("/login");
             refModelLogin.current();
         } else {
             console.log(indexTodo);
@@ -103,69 +106,86 @@ function DataPickerAnt() {
         await deleteDocDB(idListSelected);
     }
     return (
-        <Space
-            direction="vertical"
-            style={{
-                width: "40%",
-                // minHeight: "100vh",
-                height: "100vh",
-                margin: "auto",
-                background: "#264653",
-                padding: "10px 10px",
-                // marginTop: "50px",
-                borderRadius: "15px",
-            }}
-        >
-            <Space style={{ display: "flex", justifyContent: "space-between" }}>
-                <h1 style={{ color: "#fffa" }}>TodoList</h1>
-                {user.user ? (
-                    <Popover
-                        content={
-                            <div>
-                                <ChangePassWord></ChangePassWord>
-                                <Divider style={{ margin: 0 }} />
-                                <Logout />
-                            </div>
-                        }
-                        placement="rightTop"
-                        // title={"Logout"}
-                    >
-                        <h2
-                            style={{
-                                color: "#fff",
-                                textDecoration: "underline",
-                                cursor: "pointer",
-                            }}
+        <>
+            <Space
+                direction="vertical"
+                style={{
+                    width: "40%",
+                    // minHeight: "100vh",
+                    height: "100vh",
+                    margin: "auto",
+                    background: "#264653",
+                    padding: "10px 10px",
+                    // marginTop: "50px",
+                    borderRadius: "15px",
+                }}
+            >
+                <Space
+                    style={{ display: "flex", justifyContent: "space-between" }}
+                >
+                    <h1 style={{ color: "#fffa" }}>TodoList</h1>
+                    {user.user ? (
+                        <Popover
+                            content={
+                                <div
+                                    style={{
+                                        display: "flex",
+                                        flexDirection: "column",
+                                        color: "#333",
+                                    }}
+                                >
+                                    <Link to="info">Info</Link>
+                                    <Link to="change-password">
+                                        Change password
+                                    </Link>
+                                    <Divider style={{ margin: 0 }} />
+                                    <Logout />
+                                </div>
+                            }
+                            placement="rightTop"
+                            // title={"Logout"}
                         >
-                            {user.user.userName}
-                        </h2>
-                    </Popover>
+                            <h2
+                                style={{
+                                    color: "#fff",
+                                    textDecoration: "underline",
+                                    cursor: "pointer",
+                                }}
+                            >
+                                {user.user.userName}
+                            </h2>
+                        </Popover>
+                    ) : (
+                        <Link to="login">
+                            {/* <Login refModelLogin={refModelLogin} /> */}
+                            <Button ghost>Login</Button>
+                        </Link>
+                    )}
+                </Space>
+                <TodoForm addTodo={addTodo} stateFormInput={stateFormInput} />
+                {isLoading ? (
+                    <Spin
+                        size="large"
+                        style={{
+                            display: "flex",
+                            justifyContent: "center",
+                        }}
+                    />
                 ) : (
-                    <Login refModelLogin={refModelLogin} />
+                    <>
+                        <ToDoList
+                            todoList={todoList}
+                            handleComplete={handleComplete}
+                            upDateTodoForm={upDateTodoForm}
+                            handleDeleteTodo={handleDeleteTodo}
+                            // handleSelectTodo={handleSelectTodo}
+                        />
+                        <TodoCount toDoList={todoList} />
+                    </>
                 )}
             </Space>
-            <TodoForm addTodo={addTodo} stateFormInput={stateFormInput} />
-            {isLoading ? (
-                <Spin
-                    size="large"
-                    style={{
-                        display: "flex",
-                        justifyContent: "center",
-                    }}
-                />
-            ) : (
-                <>
-                    <ToDoList
-                        todoList={todoList}
-                        handleComplete={handleComplete}
-                        upDateTodoForm={upDateTodoForm}
-                        handleDeleteTodo={handleDeleteTodo}
-                        // handleSelectTodo={handleSelectTodo}
-                    />
-                    <TodoCount toDoList={todoList} />
-                </>
-            )}
-        </Space>
+            <Outlet />
+        </>
     );
 }
-export default DataPickerAnt;
+export default TodoApp;

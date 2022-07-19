@@ -3,13 +3,18 @@ import { auth } from "../firebase/config";
 const AuthContext = createContext();
 function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
+    console.log(user);
     const userValue = {
         user,
         setUserName,
+        setUserEmail,
     };
+    console.log(userValue);
     function setUserName(userName) {
-        console.log("call set name");
-        setUser({ ...user, userName: userName });
+        setUser((userPrev) => ({ ...userPrev, userName }));
+    }
+    function setUserEmail(email) {
+        setUser((userPrev) => ({ ...userPrev, email: email }));
     }
     useEffect(() => {
         const unsubscribed = auth.onAuthStateChanged((user) => {
