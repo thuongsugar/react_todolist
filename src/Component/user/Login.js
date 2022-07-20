@@ -1,6 +1,6 @@
 import { LockOutlined, MailOutlined } from "@ant-design/icons";
 import { useState, useEffect } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Button, Modal, Form, Input } from "antd";
 
@@ -9,13 +9,14 @@ import Signin from "./Signin";
 import handleError from "../../error/handleError";
 import { auth } from "../../firebase/config";
 
-function Login({ refModelLogin }) {
-    console.log(refModelLogin);
+function Login() {
+    const location = useLocation();
     const navigate = useNavigate();
     const [form] = Form.useForm();
     const [, forceUpdate] = useState({}); // To disable submit button at the beginning.
     const [isModalVisible, setIsModalVisible] = useState(true);
-    // useEffect(() => (refModelLogin.current = handleModelLogin), []);
+    const from = location.state?.from?.pathname || "/";
+
     useEffect(() => {
         if (!isModalVisible) {
             navigate("..");
@@ -35,7 +36,8 @@ function Login({ refModelLogin }) {
                 values.email,
                 values.password
             );
-            console.log(user);
+            navigate(from, { replace: true });
+            // console.log(user);
         } catch (error) {
             console.log(error);
             handleError(error.code);

@@ -3,13 +3,15 @@ import { auth } from "../firebase/config";
 const AuthContext = createContext();
 function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
-    console.log(user);
+    const [loggedIn, setLoggedIn] = useState(false);
+    const [checkingStatus, setCheckingStatus] = useState(true);
     const userValue = {
         user,
+        loggedIn,
+        checkingStatus,
         setUserName,
         setUserEmail,
     };
-    console.log(userValue);
     function setUserName(userName) {
         setUser((userPrev) => ({ ...userPrev, userName }));
     }
@@ -26,9 +28,11 @@ function AuthProvider({ children }) {
                     uid: user.uid,
                     email: user.email,
                 });
+                setLoggedIn(true);
             } else {
                 setUser(null);
             }
+            setCheckingStatus(false);
         });
         return () => unsubscribed();
     }, []);

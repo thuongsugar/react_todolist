@@ -9,14 +9,37 @@ import FormEditDisplayName from "./Component/user/FormEditDisplayName";
 import FormEditEmail from "./Component/user/FormEditEmail";
 import Login from "./Component/user/Login";
 import Signin from "./Component/user/Signin";
+import ProtectedRoute from "./Component/protected/ProtectedRoute";
+import PublicRoute from "./Component/protected/PublicRoute";
 function App() {
     return (
         <BrowserRouter>
             <Routes>
                 <Route path="/" element={<TodoApp />}>
-                    <Route path="login" element={<Login />} />
-                    <Route path="register" element={<Signin />} />
-                    <Route path="info" element={<ShowInfo />}>
+                    <Route
+                        path="login"
+                        element={
+                            <PublicRoute>
+                                <Login />
+                            </PublicRoute>
+                        }
+                    />
+                    <Route
+                        path="register"
+                        element={
+                            <PublicRoute>
+                                <Signin />
+                            </PublicRoute>
+                        }
+                    />
+                    <Route
+                        path="info"
+                        element={
+                            <ProtectedRoute>
+                                <ShowInfo />
+                            </ProtectedRoute>
+                        }
+                    >
                         <Route
                             path="edit-display-name"
                             element={<FormEditDisplayName />}
@@ -25,7 +48,11 @@ function App() {
                     </Route>
                     <Route
                         path="change-password"
-                        element={<ChangePassWord />}
+                        element={
+                            <ProtectedRoute>
+                                <ChangePassWord />
+                            </ProtectedRoute>
+                        }
                     />
                 </Route>
             </Routes>
