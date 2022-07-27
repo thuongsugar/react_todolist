@@ -8,7 +8,7 @@ import ChangePassWord from "./Component/user/ChangePassWord";
 import FormEditDisplayName from "./Component/user/FormEditDisplayName";
 import FormEditEmail from "./Component/user/FormEditEmail";
 import Login from "./Component/user/Login";
-import Signin from "./Component/user/Signin";
+import Signin from "./Component/user/Signup";
 import ProtectedRoute from "./Component/protected/ProtectedRoute";
 import PublicRoute from "./Component/protected/PublicRoute";
 function App() {

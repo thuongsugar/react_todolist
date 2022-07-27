@@ -4,12 +4,13 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Button, Modal, Form, Input } from "antd";
 
-import Signin from "./Signin";
+import Signin from "./Signup";
 
 import handleError from "../../error/handleError";
 import { auth } from "../../firebase/config";
 
 function Login() {
+    console.log("xo");
     const location = useLocation();
     const navigate = useNavigate();
     const [form] = Form.useForm();
@@ -37,6 +38,7 @@ function Login() {
                 values.password
             );
             navigate(from, { replace: true });
+            setIsModalVisible(true);
             // console.log(user);
         } catch (error) {
             console.log(error);
