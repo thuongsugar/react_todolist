@@ -1,70 +1,63 @@
-# Getting Started with Create React App
+# Ứng dụng Todo List
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+Ứng dụng **Todo List** sử dụng cho lưu trữ, lập lịch công việc, hàng ngày, hàng tuần, hàng tháng. Phục vụ cho công việc cá nhân hoặc công việc nhóm.
 
-## Available Scripts
+Ứng dụng **Todo List** sử dụng **ReactJs** làm giao diện lấy thiết kế thành phần từ **Antd** và **FireBase** để lưu trữ dữ liệu, xác thực người dùng
 
-In the project directory, you can run:
+## Tính năng trên ứng dụng
 
-### `npm start`
+### Về người dùng
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+_1.Đăng nhập:_
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+    Để sử dụng, người dùng phải tiến hành đăng ký hoặc đăng nhập, người dùng có thể sử dụng email không có thật để tạo tải khoản
 
-### `npm test`
+_2.Thay đổi thông tin_
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+    Khi đăng nhập thành công, người dùng có thể thay đổi tên người dùng(userName), thay đổi địa chỉ(email), thay đổi mật khẩu(passWord).
 
-### `npm run build`
+_3.Thêm Todo List_
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+    Khi đăng nhập thành công, người sử dụng có thể thêm công việc lên lịch cho chính mình(từ ngày hiện tại trở đi), có thể chỉnh sửa(chỉ áp dụng khi chưa quá thời gian đã lên lịch), đánh dấu hoàn thành công việc, xóa công việc(chỉ áp dụng cho công việc đã hoàn thành), thông kê tất cả công việc, công việc đã hoàn thành, công việc chưa hoàn thành, xem được công việc trong quá khứ.
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+_4.Đăng xuất_
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+    Thao tác này sẽ xóa thông tin xác thực trên máy người dùng, khi trở lại người dùng sẽ phải đăng nhập lại.
 
-### `npm run eject`
+### Về Group
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+_1.Thêm nhóm_
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+    Người dùng đã xác thực có thể tạo mới một nhóm, người tạo sẽ được chỉ định là chủ nhóm(admin),
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+_2.Xóa nhóm_
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+    Chỉ áp dụng cho người tạo ra nhóm(admin)
 
-## Learn More
+_3.Thêm thành viên_
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+    Áp dụng cho tất cả thành viên trong nhóm, người nào được thêm sẽ không thêm được lần 2(pending) cho đến khi hủy tham gia nhóm
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+_4.Hiển thị thành viên_
 
-### Code Splitting
+    Sẽ hiển thị tất cả thành viên có trong nhóm, nếu là thành viên có thể rời khỏi nhóm, nếu là chủ nhóm(admin) có thể xóa thành viên nhóm, chủ nhóm không thể rời nhóm
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+_5.Đổi tên nhóm_
 
-### Analyzing the Bundle Size
+    Áp dụng cho mọi thành viên trong nhóm
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+_6.Thêm Todo List_
 
-### Making a Progressive Web App
+    Tất cả thành viên có mọi thao tác như một người dùng, khi thêm mới một công việc sẽ hiện thị ai là người thêm
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+## Sử dụng
 
-### Advanced Configuration
+`git clone https://github.com/thuongsugar/react_todolist.git`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+`cd react_todolist`
 
-### Deployment
+`npm start`
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+## Tài liệu sử dụng
 
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+Trang chủ [React](https://reactjs.org/), [StackOverflow](https://stackoverflow.com/), [Youtube](https://youtube.com/), [Ant Design](https://ant.design/), [FireBase](https://firebase.google.com/)
