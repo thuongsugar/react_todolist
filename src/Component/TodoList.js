@@ -17,6 +17,8 @@ import moment from "moment";
 import { useState, useContext } from "react";
 // import { serverTimestamp } from "firebase/firestore";
 import { TimeContext } from "../Context/TimeProvider";
+import { AppContext } from "../Context/AppProvider";
+import { auth } from "../firebase/config";
 
 function TodoList(props) {
     let styleIcon = {
@@ -40,7 +42,7 @@ function TodoList(props) {
         display: "flex",
         justifyContent: "space-between",
     };
-
+    const { members } = useContext(AppContext);
     const { TabPane } = Tabs;
     const [visible, setVisible] = useState(false);
     const [confirmLoading, setConfirmLoading] = useState(false);
@@ -86,17 +88,21 @@ function TodoList(props) {
             console.log(dateString == new Date().toLocaleDateString("en-GB"));
         }
     }
+    function findAuthorName(uid) {
+        if (auth.currentUser) {
+            if (uid === auth.currentUser.uid) {
+                return "me";
+            }
+            return (
+                members.find((mem) => mem.uid === uid)?.displayName ||
+                "(Leaved)"
+            );
+        }
+        return "";
+    }
     return (
         <>
             <Space style={{ display: "flex", justifyContent: "space-between" }}>
-                {/* <Button
-                    disabled={props.todoList.length <= 0 ? true : false}
-                    type="primary"
-                    style={styleButton}
-                    onClick={handleSelect}
-                >
-                    {selectAll ? "Deselect All" : "Select All"}
-                </Button> */}
                 <DatePicker
                     inputReadOnly
                     size="small"
@@ -137,6 +143,7 @@ function TodoList(props) {
                 {/* {console.log(props.todoList[0].createAt.toDate().)} */}
                 <TabPane tab="All" key={1}>
                     <List
+                        bordered
                         className="list_todo"
                         size="small"
                         dataSource={props.todoList}
@@ -144,7 +151,7 @@ function TodoList(props) {
                             <Tooltip
                                 placement="left"
                                 title={`${todoData.createDate}, ${todoData.createTime}`}
-                                key={index}
+                                key={todoData.id}
                             >
                                 <List.Item
                                     direction="horizontal"
@@ -158,6 +165,9 @@ function TodoList(props) {
                                     <h3 style={{ color: "#fff" }}>
                                         {todoData.input}
                                     </h3>
+                                    <p style={{ color: "white" }}>
+                                        {findAuthorName(todoData.uid)}
+                                    </p>
                                     <Space size={"small"}>
                                         {todoData.isComplete ? (
                                             <CheckSquareOutlined
@@ -199,7 +209,7 @@ function TodoList(props) {
                                 <Tooltip
                                     placement="left"
                                     title={`${todoData.createDate}, ${todoData.createTime}`}
-                                    key={index}
+                                    key={todoData.id}
                                 >
                                     <List.Item
                                         direction="horizontal"
@@ -261,7 +271,7 @@ function TodoList(props) {
                                 <Tooltip
                                     placement="left"
                                     title={`${todoData.createDate}, ${todoData.createTime}`}
-                                    key={index}
+                                    key={todoData.id}
                                 >
                                     <List.Item
                                         direction="horizontal"

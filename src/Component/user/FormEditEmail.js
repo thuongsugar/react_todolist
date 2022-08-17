@@ -21,7 +21,8 @@ function FormEditEmail() {
 
     const onFinish = async (values) => {
         try {
-            await updateEmailDB(values.newMail.trim());
+            await updateEmailDB(user.id, values.newMail.trim());
+
             handleError("success");
             setUserEmail(values.newMail.trim());
             navigate("..");

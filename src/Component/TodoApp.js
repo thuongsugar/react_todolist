@@ -1,5 +1,5 @@
 import { useState, useRef, useContext, useEffect } from "react";
-import { Space, Popover, Spin, Divider, Button } from "antd";
+import { Space, Popover, Spin, Divider, Button, Avatar, Tooltip } from "antd";
 import {
     collection,
     query,
@@ -12,36 +12,47 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import TodoForm from "./TodoForm";
 import ToDoList from "./TodoList";
 import TodoCount from "./TodoCount";
-import Login from "./user/Login";
-import Logout from "./user/Logout";
-import ChangePassWord from "./user/ChangePassWord";
 
 import { addTodoDB, updateTodoDB, deleteDocDB } from "../firebase/service";
 
 import { AuthContext } from "../Context/AuthProvider";
 import { auth, db } from "../firebase/config";
 import { TimeContext } from "../Context/TimeProvider";
+import SideBar from "./SideBar";
+import { AppContext } from "../Context/AppProvider";
+import ControllerGroup from "./group/ControllerGroup";
 
 function TodoApp() {
     const user = useContext(AuthContext);
+    const { selectedGroup, members, selectedGroupId } = useContext(AppContext);
     const [timeChoice, setTimeChoice] = useContext(TimeContext);
     const [todoList, setTodo] = useState([]);
     const [isLoading, setLoading] = useState(false);
     const navigate = useNavigate();
     const stateTodoForm = useRef();
-    const refModelLogin = useRef();
+    // const refModelLogin = useRef();
 
     useEffect(() => {
+        console.log(selectedGroupId);
         if (user.user) {
             const todosRef = collection(db, "todos");
+            console.log("query lai todo");
+            console.log(selectedGroupId);
+
             const q = query(
                 todosRef,
-                where("uid", "==", auth.currentUser.uid),
+                selectedGroupId === "me"
+                    ? (where("uid", "==", auth.currentUser.uid),
+                      where("groupId", "==", "me"))
+                    : where("groupId", "==", selectedGroupId),
                 where("todoDate", "==", timeChoice),
                 orderBy("input")
             );
             setLoading(true);
             const unsubscribed = onSnapshot(q, (querySnap) => {
+                console.log(selectedGroupId);
+                console.log(auth.currentUser.uid);
+                console.log(querySnap);
                 const document = querySnap.docs.map((doc) => ({
                     ...doc.data(),
                     id: doc.id,
@@ -49,19 +60,21 @@ function TodoApp() {
                 console.log(document);
                 setTodo(document);
                 setLoading(false);
-                return () => unsubscribed();
+                return () => {
+                    console.log("unsubsc");
+                    unsubscribed();
+                };
             });
         } else {
             setTodo([]);
         }
-    }, [user.user, timeChoice]);
+    }, [user.user, timeChoice, selectedGroupId]);
 
     function addTodo(inputData, indexTodo) {
         if (!auth.currentUser) {
             navigate("/login");
-            refModelLogin.current();
+            // refModelLogin.current();
         } else {
-            console.log(indexTodo);
             if (inputData.input.trim().length > 0) {
                 const timeCreate = new Date().toLocaleString("en-GB"); // dd/mm/yyy, hh:mm:ss
                 let dataTime = {
@@ -78,7 +91,11 @@ function TodoApp() {
                     updateTodoDB(todoUpdate.id, todoUpdate);
                 } else {
                     //new todo
-                    addTodoDB({ ...inputData, ...dataTime });
+                    addTodoDB({
+                        ...inputData,
+                        ...dataTime,
+                        groupId: selectedGroupId,
+                    });
                 }
             }
         }
@@ -88,7 +105,6 @@ function TodoApp() {
     }
 
     function handleComplete(index) {
-        console.log(todoList[index]);
         todoList[index].isComplete = !todoList[index].isComplete;
         updateTodoDB(todoList[index].id, todoList[index]);
     }
@@ -106,18 +122,19 @@ function TodoApp() {
         await deleteDocDB(idListSelected);
     }
     return (
-        <>
+        <div style={{ display: "flex", width: "70%", margin: "auto" }}>
+            <SideBar />
             <Space
                 direction="vertical"
                 style={{
-                    width: "40%",
+                    width: "80%",
                     // minHeight: "100vh",
                     height: "100vh",
-                    margin: "auto",
-                    background: "#264653",
+                    // margin: "auto",
+                    background: "rgba(0,0,0,0.411)",
                     padding: "10px 10px",
                     // marginTop: "50px",
-                    borderRadius: "15px",
+                    borderRadius: "0 15px 15px 0",
                 }}
             >
                 <Space
@@ -125,41 +142,52 @@ function TodoApp() {
                 >
                     <h1 style={{ color: "#fffa" }}>TodoList</h1>
                     {user.user ? (
-                        <Popover
-                            content={
-                                <div
+                        <div>
+                            <Popover
+                                content={<ControllerGroup />}
+                                placement="rightTop"
+                                // title={"Logout"}
+                            >
+                                <h2
                                     style={{
-                                        display: "flex",
-                                        flexDirection: "column",
-                                        color: "#333",
+                                        color: "#fff",
+                                        textDecoration: "underline",
+                                        cursor: "pointer",
+                                        margin: 0,
                                     }}
                                 >
-                                    <Link to="info">Info</Link>
-                                    <Link to="change-password">
-                                        Change password
-                                    </Link>
-                                    <Divider style={{ margin: 0 }} />
-                                    <Logout />
-                                </div>
-                            }
-                            placement="rightTop"
-                            // title={"Logout"}
-                        >
-                            <h2
-                                style={{
-                                    color: "#fff",
-                                    textDecoration: "underline",
-                                    cursor: "pointer",
+                                    {selectedGroup && selectedGroup.nameGroup}
+                                </h2>
+                            </Popover>
+                            <Avatar.Group
+                                maxCount={2}
+                                size="small"
+                                maxStyle={{
+                                    color: "#f56a00",
+                                    backgroundColor: "#fde3cf",
                                 }}
                             >
-                                {user.user.userName}
-                            </h2>
-                        </Popover>
+                                {members.map((member) => (
+                                    <Tooltip title={member.displayName}>
+                                        <Avatar
+                                            style={{
+                                                background: `#${Math.floor(
+                                                    Math.random() * 16777215
+                                                ).toString(16)}`,
+                                            }}
+                                            key={member.uid}
+                                        >
+                                            {member.displayName &&
+                                                member.displayName
+                                                    .charAt(0)
+                                                    .toLocaleUpperCase()}
+                                        </Avatar>
+                                    </Tooltip>
+                                ))}
+                            </Avatar.Group>
+                        </div>
                     ) : (
-                        <Link to="login">
-                            {/* <Login refModelLogin={refModelLogin} /> */}
-                            <Button ghost>Login</Button>
-                        </Link>
+                        ""
                     )}
                 </Space>
                 <TodoForm addTodo={addTodo} stateFormInput={stateFormInput} />
@@ -185,7 +213,7 @@ function TodoApp() {
                 )}
             </Space>
             <Outlet />
-        </>
+        </div>
     );
 }
 export default TodoApp;

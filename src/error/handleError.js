@@ -11,6 +11,8 @@ function handleError(codeError) {
             return message.info("Weak password");
         case "auth/invalid-email":
             return message.error("Invalid email");
+        case "auth/requires-recent-login":
+            return message.error("Requires back login");
         case "success":
             return message.success("Success");
 

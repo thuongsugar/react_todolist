@@ -5,14 +5,17 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 import AuthProvider from "./Context/AuthProvider";
 import TimeProvider from "./Context/TimeProvider";
+import AppProvider from "./Context/AppProvider";
 
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
     // <React.StrictMode>
     <AuthProvider>
-        <TimeProvider>
-            <App />
-        </TimeProvider>
+        <AppProvider>
+            <TimeProvider>
+                <App />
+            </TimeProvider>
+        </AppProvider>
     </AuthProvider>
     // </React.StrictMode>
 );

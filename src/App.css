@@ -53,3 +53,15 @@
 .list_todo::-webkit-scrollbar-thumb:hover {
   background: rgb(203, 169, 241);
 }
+.ant-collapse-header {
+  color: white !important;
+  padding-bottom: 0 !important;
+  padding-left: 0 !important;
+}
+.ant-collapse-content-box {
+  color: white !important;
+cursor: pointer;
+}
+.logo{
+  position: absolute;
+}

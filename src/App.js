@@ -11,6 +11,10 @@ import Login from "./Component/user/Login";
 import Signin from "./Component/user/Signup";
 import ProtectedRoute from "./Component/protected/ProtectedRoute";
 import PublicRoute from "./Component/protected/PublicRoute";
+import AddGroupModel from "./Component/models/AddGroupModel";
+import InviteMemberModel from "./Component/group/InviteMemberModel";
+import ShowMemberModel from "./Component/models/ShowMemberModel";
+import RenameGroupModel from "./Component/models/RenameGroupModel";
 function App() {
     return (
         <BrowserRouter>
@@ -56,6 +60,10 @@ function App() {
                     />
                 </Route>
             </Routes>
+            <AddGroupModel />
+            <InviteMemberModel />
+            <ShowMemberModel />
+            <RenameGroupModel />
         </BrowserRouter>
     );
 }

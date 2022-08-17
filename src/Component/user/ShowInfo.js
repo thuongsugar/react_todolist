@@ -1,4 +1,4 @@
-import { EditOutlined } from "@ant-design/icons";
+import { EditOutlined, MailOutlined, UserOutlined } from "@ant-design/icons";
 import { useContext, useEffect, useState } from "react";
 import { Button, Modal, Form, Input, Descriptions } from "antd";
 import { Link, Outlet, useNavigate } from "react-router-dom";
@@ -40,7 +40,7 @@ function ShowInfo() {
         setIsModalVisible(false);
         form.resetFields();
     };
-
+    console.log(user);
     const handleCancel = () => {
         console.log("cancel");
         setIsModalVisible(false);
@@ -57,11 +57,22 @@ function ShowInfo() {
                 footer={[]}
             >
                 <Descriptions>
-                    <Descriptions.Item label="Display Name" span={3}>
+                    <Descriptions.Item
+                        label={
+                            <i>
+                                <UserOutlined /> Display Name
+                            </i>
+                        }
+                        span={3}
+                    >
                         {user ? (
                             <>
-                                {user.userName}
-                                <Link to={"edit-display-name"}>
+                                <b>{user.displayName}</b>
+
+                                <Link
+                                    to={"edit-display-name"}
+                                    style={{ marginLeft: "5px" }}
+                                >
                                     <EditOutlined />
                                 </Link>
                             </>
@@ -69,12 +80,22 @@ function ShowInfo() {
                             ""
                         )}
                     </Descriptions.Item>
-                    <Descriptions.Item label="Email" span={3}>
+                    <Descriptions.Item
+                        label={
+                            <i>
+                                <MailOutlined /> Email
+                            </i>
+                        }
+                        span={3}
+                    >
                         <>
                             {user ? (
                                 <>
-                                    {user.email} <Link to="edit-email" />
-                                    <Link to="edit-email">
+                                    <b>{user.email}</b> <Link to="edit-email" />
+                                    <Link
+                                        to="edit-email"
+                                        style={{ marginLeft: "5px" }}
+                                    >
                                         <EditOutlined />
                                     </Link>
                                 </>

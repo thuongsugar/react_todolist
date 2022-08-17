@@ -4,8 +4,6 @@ import { Link, useLocation, useNavigate } from "react-router-dom";
 import { signInWithEmailAndPassword } from "firebase/auth";
 import { Button, Modal, Form, Input } from "antd";
 
-import Signin from "./Signup";
-
 import handleError from "../../error/handleError";
 import { auth } from "../../firebase/config";
 
@@ -72,7 +70,7 @@ function Login() {
                 onCancel={handleCancel}
                 footer={[
                     <Link to="/register">
-                        <Button>Sign in</Button>
+                        <Button>Sign up</Button>
                     </Link>,
                 ]}
             >

@@ -1,5 +1,6 @@
 import { createContext, useEffect, useState } from "react";
 import { auth } from "../firebase/config";
+import { getUserDB } from "../firebase/service";
 const AuthContext = createContext();
 function AuthProvider({ children }) {
     const [user, setUser] = useState(null);
@@ -9,25 +10,30 @@ function AuthProvider({ children }) {
         user,
         loggedIn,
         checkingStatus,
-        setUserName,
+        setUserState,
         setUserEmail,
     };
-    function setUserName(userName) {
-        setUser((userPrev) => ({ ...userPrev, userName }));
+    function setUserState(user) {
+        setUser((userPrev) => ({ ...userPrev, ...user }));
     }
     function setUserEmail(email) {
         setUser((userPrev) => ({ ...userPrev, email: email }));
     }
     useEffect(() => {
-        const unsubscribed = auth.onAuthStateChanged((user) => {
+        const unsubscribed = auth.onAuthStateChanged(async (user) => {
             console.log(user);
             if (user) {
                 console.log("det");
-                setUser({
-                    userName: user.displayName && user.displayName,
-                    uid: user.uid,
-                    email: user.email,
-                });
+                const userDB = await getUserDB(user.uid);
+                console.log(userDB);
+                userDB
+                    ? setUser({
+                          displayName: userDB.displayName,
+                          uid: userDB.uid,
+                          email: userDB.email,
+                          id: userDB.id,
+                      })
+                    : setUser(null);
                 setLoggedIn(true);
             } else {
                 setLoggedIn(false);

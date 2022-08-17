@@ -7,25 +7,28 @@ import handleError from "../../error/handleError";
 import { updateProfileDB } from "../../firebase/service";
 
 function FormEditDisplayName() {
-    const { user, setUserName } = useContext(AuthContext);
+    const { user, setUserState } = useContext(AuthContext);
     console.log(user);
     const [form] = Form.useForm();
     const navigate = useNavigate();
     useEffect(() => {
         if (user) {
-            form.setFieldsValue({ newDisplayName: user.userName });
+            form.setFieldsValue({ newDisplayName: user.displayName });
             form.getFieldInstance("newDisplayName").focus();
         }
     }, [user]);
     const onFinish = async (values) => {
         try {
-            await updateProfileDB({
+            console.log(values.newDisplayName.trim());
+            const userUpdate = await updateProfileDB(user.id, {
                 displayName: values.newDisplayName.trim(),
             });
             handleError("success");
-            setUserName(values.newDisplayName.trim());
+            console.log(userUpdate);
+            setUserState(userUpdate);
             navigate("..");
         } catch (error) {
+            console.log(error);
             handleError(error.code);
         }
     };

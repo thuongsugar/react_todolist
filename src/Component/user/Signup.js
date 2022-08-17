@@ -6,7 +6,7 @@ import { createUserWithEmailAndPassword } from "firebase/auth";
 import { auth } from "../../firebase/config";
 import { AuthContext } from "../../Context/AuthProvider";
 import handleError from "../../error/handleError";
-import { updateProfileDB } from "../../firebase/service";
+import { addUserDB, updateProfileDB } from "../../firebase/service";
 import { useNavigate } from "react-router-dom";
 
 function Signin() {
@@ -38,10 +38,12 @@ function Signin() {
                 values.email,
                 values.password
             );
-            await updateProfileDB({
+
+            const userDB = await addUserDB({
                 displayName: values.userName,
+                email: auth.currentUser.email,
+                uid: auth.currentUser.uid,
             });
-            userAuth.setUserName(auth.currentUser.displayName);
         } catch (error) {
             console.log(error);
             handleError(error.code);
@@ -68,7 +70,7 @@ function Signin() {
                 Sign in
             </Button> */}
             <Modal
-                title="Sign in"
+                title="Sign up"
                 visible={isModalVisible}
                 onOk={handleOk}
                 onCancel={handleCancel}
@@ -142,7 +144,7 @@ function Signin() {
                                         .length
                                 }
                             >
-                                Sign in
+                                Sign up
                             </Button>
                         )}
                     </Form.Item>
