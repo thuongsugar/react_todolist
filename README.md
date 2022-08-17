@@ -52,11 +52,15 @@ _6.Thêm Todo List_
 
 ## Sử dụng
 
-`git clone https://github.com/thuongsugar/react_todolist.git`
+    git clone https://github.com/thuongsugar/react_todolist.git
 
-`cd react_todolist`
+#
 
-`npm start`
+    cd react_todolist
+
+#
+
+    npm start
 
 ## Tài liệu sử dụng
 
