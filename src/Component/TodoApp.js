@@ -208,7 +208,7 @@ function TodoApp() {
                             handleDeleteTodo={handleDeleteTodo}
                             // handleSelectTodo={handleSelectTodo}
                         />
-                        <TodoCount toDoList={todoList} />
+                        {auth.currentUser && <TodoCount toDoList={todoList} />}
                     </>
                 )}
             </Space>

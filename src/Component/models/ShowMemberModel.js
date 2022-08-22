@@ -13,13 +13,14 @@ function ShowMemberModel() {
         selectedGroup,
         members,
     } = useContext(AppContext);
+    console.log(members);
     const handleCancel = () => {
         setIsShowMemberVisible(false);
     };
     const handleOk = async () => {
         setIsShowMemberVisible(false);
     };
-    return (
+    return user ? (
         <Modal
             onCancel={handleCancel}
             footer={[]}
@@ -27,25 +28,28 @@ function ShowMemberModel() {
             visible={isShowMemberVisible}
             title="Member Group"
         >
-            {members.map((mem) => {
-                console.log("vao");
-                return (
-                    <div key={mem.id} style={{ marginBottom: "8px" }}>
-                        {selectedGroup.owner === user.uid &&
-                        selectedGroup.owner === mem.uid ? (
-                            <p>
-                                <SafetyCertificateOutlined
-                                    style={{ color: "#04d92f" }}
-                                />{" "}
-                                Me
-                            </p>
-                        ) : (
-                            <ControllerMember member={mem} />
-                        )}
-                    </div>
-                );
-            })}
+            {members.length > 0 &&
+                members.map((mem) => {
+                    console.log("vao");
+                    return (
+                        <div key={mem.id} style={{ marginBottom: "8px" }}>
+                            {selectedGroup.owner === user.uid &&
+                            selectedGroup.owner === mem.uid ? (
+                                <p>
+                                    <SafetyCertificateOutlined
+                                        style={{ color: "#04d92f" }}
+                                    />{" "}
+                                    Me
+                                </p>
+                            ) : (
+                                <ControllerMember member={mem} />
+                            )}
+                        </div>
+                    );
+                })}
         </Modal>
+    ) : (
+        <></>
     );
 }
 
